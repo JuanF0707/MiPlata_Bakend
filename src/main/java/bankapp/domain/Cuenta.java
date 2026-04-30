@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// Clase base que representa una cuenta bancaria
-// CuentaAhorros, CuentaCorriente y TarjetaCredito heredan de esta clase
+
 public class Cuenta {
 
     private Date fechaApertura;
@@ -56,7 +55,7 @@ public class Cuenta {
         return true;
     }
 
-    // Retira dinero de la cuenta (puede ser sobreescrito por subclases)
+    // Retira dinero de la cuenta
     public boolean retirar(double valor) {
         if (estado != EstadoCuenta.ACTIVA) {
             System.out.println("La cuenta no esta activa. No se puede retirar.");
@@ -88,7 +87,6 @@ public class Cuenta {
         return true;
     }
 
-    // Acredita una transferencia recibida registrando TRANSFERENCIA_IN
     public boolean recibirTransferencia(double valor) {
         if (estado != EstadoCuenta.ACTIVA) {
             System.out.println("La cuenta destino no esta activa.");

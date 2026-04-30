@@ -33,7 +33,7 @@ public class MenuApp {
         this.adminView = adminView;
     }
 
-    // Punto de entrada: menu principal
+    // menu principal
     public void iniciar() {
         System.out.println("Bienvenido al Banco Mi Plata");
 

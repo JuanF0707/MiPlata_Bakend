@@ -8,7 +8,6 @@ import bankapp.utils.BankFormValidation;
 import java.util.List;
 import java.util.Scanner;
 
-// Implementacion de CuentaService: logica de transacciones bancarias
 public class CuentaServiceImpl implements CuentaService {
 
     private final Scanner sc = AppScanner.get();

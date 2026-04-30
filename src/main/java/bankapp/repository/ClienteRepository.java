@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// Capa de acceso a datos: guarda y busca clientes en memoria (ArrayList)
+// Capa de acceso a datos: guarda y busca clientes en Array
 public class ClienteRepository {
 
     private List<Cliente> clientes = new ArrayList<>();

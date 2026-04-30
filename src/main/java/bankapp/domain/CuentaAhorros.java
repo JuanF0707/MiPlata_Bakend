@@ -3,7 +3,7 @@ package bankapp.domain;
 import bankapp.domain.enums.EstadoCuenta;
 import bankapp.domain.enums.TipoMovimiento;
 
-// Cuenta de ahorros: retiro cobra 1.5% de interes, puede transferir
+// Cuenta de ahorros: retiro cobra 1.5% de interes
 public class CuentaAhorros extends Cuenta {
 
     private double tasaInteres;
