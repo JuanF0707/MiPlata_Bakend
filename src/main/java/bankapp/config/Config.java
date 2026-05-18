@@ -1,11 +1,15 @@
 package bankapp.config;
 
-import bankapp.repository.ClienteRepository;
+import bankapp.persistence.database.DataBaseConnectionMySQL;
+import bankapp.persistence.repository.ClienteRepositoryAdapterMySQL;
 import bankapp.services.*;
+import bankapp.services.outputport.ClientePersistencePort;
 import bankapp.userinterface.MenuApp;
 import bankapp.view.AdminView;
 import bankapp.view.ClienteView;
 import bankapp.view.CuentaView;
+
+import java.sql.Connection;
 
 // Simple Factory: crea y conecta todos los objetos de la aplicacion
 // Igual al patron usado en LuciaStore — un solo lugar para ensamblar todo
@@ -14,7 +18,8 @@ public class Config {
     public static MenuApp createMenuApp() {
 
         // Capa repository
-        ClienteRepository clienteRepository = new ClienteRepository();
+        Connection connection = DataBaseConnectionMySQL.getInstance().getConnection();
+        ClientePersistencePort clienteRepository = new ClienteRepositoryAdapterMySQL(connection);
 
         // Capa services
         ClienteService clienteService = new ClienteServiceImpl(clienteRepository);
