@@ -1,6 +1,9 @@
 package bankapp.persistence.repository;
 
 import bankapp.domain.Cliente;
+import bankapp.domain.Cuenta;
+import bankapp.domain.CuentaAhorros;
+import bankapp.domain.TarjetaCredito;
 import bankapp.services.outputport.ClientePersistencePort;
 
 import java.sql.Connection;
@@ -44,6 +47,36 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
         }
 
         return cliente;
+    }
+
+    // agrego metodo para guardar en el servidor las 3 cuentas que se crean de un usuario nuevo
+    private void saveCuentas(Cliente cliente){
+        for (Cuenta cuenta : cliente.getCuentas()){
+
+            String tipo = "";
+            double tasaInteres = 0;
+            double cupo = 0;
+            double deuda = 0;
+
+            if (cuenta instanceof CuentaAhorros){
+                // Ahorros
+                CuentaAhorros ca = (CuentaAhorros) cuenta;
+                tipo = "AHORROS";
+                tasaInteres = ca.getTasaInteres();
+
+            } else if (cuenta instanceof TarjetaCredito) {
+                // Tarjeta Credito
+                TarjetaCredito tc = (TarjetaCredito) cuenta;
+                tipo = "TARJETA";
+                cupo = tc.getCupo();
+                deuda = tc.getDeuda();
+            } else {
+                // Corriente
+                 tipo = "CORRIENTE";
+
+            }
+            String sql = "INSERT INTO cuentas (numero_cuenta, tipo, saldo, estado, tasa_interes, cupo, deuda, cliente_id) VALUES (?,?,?,?,?,?,?,?)";
+        }
     }
 
     @Override
