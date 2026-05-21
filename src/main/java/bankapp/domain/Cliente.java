@@ -42,6 +42,10 @@ public class Cliente {
     public List<Cuenta> getCuentas() { return cuentas; }
 
     // Setters
+
+    public void setIntentosFallidos(int intentosFallidos) {this.intentosFallidos = intentosFallidos;}
+    public void setBloqueado(boolean bloqueado) {this.bloqueado = bloqueado;}
+    public void setId (int id){this.id = id;}
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setCelular(String celular) { this.celular = celular; }
     public void setContrasena(String contrasena) { this.contrasena = contrasena; }

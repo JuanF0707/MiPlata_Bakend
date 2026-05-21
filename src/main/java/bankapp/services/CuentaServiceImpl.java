@@ -1,7 +1,7 @@
 package bankapp.services;
 
 import bankapp.domain.*;
-import bankapp.repository.ClienteRepository;
+import bankapp.services.outputport.ClientePersistencePort;
 import bankapp.utils.AppScanner;
 import bankapp.utils.BankFormValidation;
 
@@ -11,9 +11,9 @@ import java.util.Scanner;
 public class CuentaServiceImpl implements CuentaService {
 
     private final Scanner sc = AppScanner.get();
-    private final ClienteRepository clienteRepository;
+    private final ClientePersistencePort clienteRepository;
 
-    public CuentaServiceImpl(ClienteRepository clienteRepository) {
+    public CuentaServiceImpl(ClientePersistencePort clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 

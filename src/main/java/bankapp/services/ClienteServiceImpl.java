@@ -5,6 +5,7 @@ import bankapp.domain.CuentaAhorros;
 import bankapp.domain.CuentaCorriente;
 import bankapp.domain.TarjetaCredito;
 import bankapp.repository.ClienteRepository;
+import bankapp.services.outputport.ClientePersistencePort;
 import bankapp.utils.AppScanner;
 import bankapp.utils.BankFormValidation;
 
@@ -16,10 +17,10 @@ import java.util.Scanner;
 public class ClienteServiceImpl implements ClienteService {
 
     private final Scanner sc = AppScanner.get();
-    private final ClienteRepository clienteRepository;
+    private final ClientePersistencePort clienteRepository;
     private int nextId = 1;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository) {
+    public ClienteServiceImpl(ClientePersistencePort clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 
