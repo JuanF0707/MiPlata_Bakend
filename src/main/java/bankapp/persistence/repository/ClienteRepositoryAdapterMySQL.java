@@ -41,6 +41,8 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
             if (keys.next()){
             cliente.setId(keys.getInt(1));
             }
+            saveCuentas(cliente);    // Llamo al metodo de saveCuentas desde saveCliente
+
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error al sincronizar información en la Base De Datos");
@@ -76,8 +78,26 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
             }
             String sql = "INSERT INTO cuentas (numero_cuenta, tipo, saldo, estado, tasa_interes, cupo, deuda, cliente_id) VALUES (?,?,?,?,?,?,?,?)";
+
+            try(PreparedStatement ps = connection.prepareStatement(sql)) {
+
+                ps.setString(1, cuenta.getNumeroCuenta());
+                ps.setString(2, tipo);
+                ps.setDouble(3, cuenta.getSaldo());
+                ps.setString(4, cuenta.getEstado().name());
+                ps.setDouble(5, tasaInteres);
+                ps.setDouble(6, cupo);
+                ps.setDouble(7, deuda);
+                ps.setInt(8, cliente.getId());
+
+                ps.executeUpdate();
+
+            } catch (Exception e){
+                System.out.println("Error al guardar las cuentas del usuario");
+            }
         }
     }
+
 
     @Override
     public List<Cliente> findAllClientes() {

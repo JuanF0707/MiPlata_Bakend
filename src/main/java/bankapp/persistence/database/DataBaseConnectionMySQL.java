@@ -21,6 +21,7 @@ public class DataBaseConnectionMySQL {
             System.out.println("CONECTADO A LA BASE DE DATOS");
         } catch (SQLException e) {
             System.out.println("Fallo al conectar la Base De Datos");
+            System.exit(1); // Cierro el programa cuando la BDD no conecta.
         }
     }
 
