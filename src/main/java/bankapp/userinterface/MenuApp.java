@@ -133,6 +133,9 @@ public class MenuApp {
                     clienteView.updateCliente(cliente);
                     break;
                 case 9:
+                    clienteView.cambiarContrasena(cliente);
+                    break;
+                case 10:
                     enSesion = false;
                     System.out.println("Sesion cerrada. Hasta pronto, " + cliente.getNombre() + "!");
                     break;
@@ -156,7 +159,8 @@ public class MenuApp {
         System.out.println("6. Ver movimientos");
         System.out.println("7. Menu Tarjeta de Credito");
         System.out.println("8. Editar mi perfil");
-        System.out.println("9. Cerrar sesion");
+        System.out.println("9. Cambiar contrasena");
+        System.out.println("10. Cerrar sesion");
         System.out.print("Elija una opcion: ");
     }
 

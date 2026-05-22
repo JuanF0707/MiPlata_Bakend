@@ -44,8 +44,7 @@ public class ClienteServiceImpl implements ClienteService {
             return null;
         }
 
-        System.out.println("Ingrese su contrasena:");
-        String contrasena = sc.nextLine().trim();
+        String contrasena = BankFormValidation.validarContrasena("Ingrese su contrasena (min 8 caracteres, mayuscula, minuscula y numero):");
 
         System.out.println("Confirme su contrasena:");
         String confirmar = sc.nextLine().trim();
@@ -100,6 +99,30 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public boolean deleteCliente(int id) {
         return clienteRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean cambiarContrasena(Cliente cliente) {
+        System.out.println("Ingrese su contrasena actual:");
+        String actual = sc.nextLine().trim();
+
+        if (!cliente.getContrasena().equals(actual)) {
+            System.out.println("La contrasena actual es incorrecta.");
+            return false;
+        }
+
+        String nueva = BankFormValidation.validarContrasena("Ingrese la nueva contrasena (min 8 caracteres, mayuscula, minuscula y numero):");
+
+        System.out.println("Confirme la nueva contrasena:");
+        String confirmar = sc.nextLine().trim();
+
+        if (!nueva.equals(confirmar)) {
+            System.out.println("Las contrasenas no coinciden.");
+            return false;
+        }
+
+        cliente.setContrasena(nueva);
+        return true;
     }
 
     // Login: busca el cliente y lo autentica, maneja bloqueo
