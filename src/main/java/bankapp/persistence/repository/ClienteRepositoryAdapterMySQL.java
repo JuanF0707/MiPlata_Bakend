@@ -1,9 +1,6 @@
 package bankapp.persistence.repository;
 
-import bankapp.domain.Cliente;
-import bankapp.domain.Cuenta;
-import bankapp.domain.CuentaAhorros;
-import bankapp.domain.TarjetaCredito;
+import bankapp.domain.*;
 import bankapp.services.outputport.ClientePersistencePort;
 
 import java.sql.Connection;
@@ -132,33 +129,45 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
     @Override
     public Optional<Cliente> findByUsuario(String usuario) {
-
-        String sql = "SELECT * FROM cliente WHERE usuario = ?";
-
+        String sql = "SELECT c.*, cu.id as cuenta_id, cu.numero_cuenta, cu.tipo, cu.saldo, cu.estado, cu.tasa_interes, cu.cupo, cu.deuda " +
+                "FROM cliente c LEFT JOIN cuentas cu ON c.id = cu.cliente_id " +
+                "WHERE c.usuario = ?";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario);
-
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()){
-            Cliente c = new Cliente(
-                    rs.getInt("id"),
-                    rs.getString("identificacion"),
-                    rs.getString("nombre"),
-                    rs.getString("celular"),
-                    rs.getString("usuario"),
-                    rs.getString("contrasena")
-            );
-            c.setBloqueado(rs.getBoolean("bloqueado"));
-            c.setIntentosFallidos(rs.getInt("intentosFallidos"));
-
-
-            return Optional.of(c);
-
+            ResultSet rs = ps.executeQuery();
+            Cliente cliente = null;
+            while(rs.next()){
+                if(cliente == null){
+                    cliente = new Cliente(
+                            rs.getInt("id"),
+                            rs.getString("identificacion"),
+                            rs.getString("nombre"),
+                            rs.getString("celular"),
+                            rs.getString("usuario"),
+                            rs.getString("contrasena")
+                    );
+                    cliente.setBloqueado(rs.getBoolean("bloqueado"));
+                    cliente.setIntentosFallidos(rs.getInt("intentosFallidos"));
+                }
+                String tipo = rs.getString("tipo");
+                if(tipo != null){
+                    Cuenta cuenta = null;
+                    if(tipo.equals("AHORROS")){
+                        cuenta = new CuentaAhorros(rs.getString("numero_cuenta"), rs.getDouble("saldo"), rs.getDouble("tasa_interes"));
+                    } else if(tipo.equals("TARJETA")){
+                        cuenta = new TarjetaCredito(rs.getString("numero_cuenta"), rs.getDouble("cupo"));
+                    } else {
+                        cuenta = new CuentaCorriente(rs.getString("numero_cuenta"), rs.getDouble("saldo"));
+                    }
+                    cliente.agregarCuenta(cuenta);
+                }
+            }
+            if(cliente != null) return Optional.of(cliente);
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Error al buscar cliente");
         }
-        }catch (Exception e){
-            System.out.println("Error");
-        } return Optional.empty();
-
+        return Optional.empty();
     }
 
     @Override
