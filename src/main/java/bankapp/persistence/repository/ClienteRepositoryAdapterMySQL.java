@@ -1,6 +1,8 @@
 package bankapp.persistence.repository;
 
 import bankapp.domain.*;
+import bankapp.persistence.mapper.ClienteRowMapper;
+import bankapp.persistence.mapper.RowMapper;
 import bankapp.services.outputport.ClientePersistencePort;
 
 import java.sql.Connection;
@@ -11,6 +13,7 @@ import java.util.*;
 public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
     private Connection connection;
+    private final ClienteRowMapper clienteRowMapper = new ClienteRowMapper();
 
     public ClienteRepositoryAdapterMySQL(Connection connection) {
         this.connection = connection;
@@ -106,16 +109,7 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
             while(rs.next()){
                 int id = rs.getInt("id");
                 if(!mapa.containsKey(id)){
-                    Cliente c = new Cliente(
-                            id,
-                            rs.getString("identificacion"),
-                            rs.getString("nombre"),
-                            rs.getString("celular"),
-                            rs.getString("usuario"),
-                            rs.getString("contrasena")
-                    );
-                    c.setBloqueado(rs.getBoolean("bloqueado"));
-                    c.setIntentosFallidos(rs.getInt("intentosFallidos"));
+                    Cliente c = clienteRowMapper.mapRow(rs);
                     mapa.put(id, c);
                 }
                 String tipo = rs.getString("tipo");
@@ -153,16 +147,7 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
             Cliente cliente = null;
             while(rs.next()){
                 if(cliente == null){
-                    cliente = new Cliente(
-                            rs.getInt("id"),
-                            rs.getString("identificacion"),
-                            rs.getString("nombre"),
-                            rs.getString("celular"),
-                            rs.getString("usuario"),
-                            rs.getString("contrasena")
-                    );
-                    cliente.setBloqueado(rs.getBoolean("bloqueado"));
-                    cliente.setIntentosFallidos(rs.getInt("intentosFallidos"));
+                    cliente = clienteRowMapper.mapRow(rs);
                 }
                 String tipo = rs.getString("tipo");
                 if(tipo != null){
