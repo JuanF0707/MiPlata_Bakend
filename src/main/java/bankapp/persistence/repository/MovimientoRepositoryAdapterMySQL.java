@@ -52,4 +52,19 @@ public class MovimientoRepositoryAdapterMySQL {
         }
         return lista;
     }
+
+
+    // Agrego metodo (Mantiene la persistencia del saldo de las cuentas del cliente)
+
+    public void actualizarSaldo(int cuentaId, double nuevoSaldo){
+        String sql = "UPDATE cuentas SET saldo = ? WHERE id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setDouble(1, nuevoSaldo);
+            ps.setInt(2, cuentaId);
+            ps.executeUpdate();
+
+        } catch (Exception e){
+            System.out.println("Error al actualizar saldo");
+        }
+    }
 }
