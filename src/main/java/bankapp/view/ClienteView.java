@@ -52,6 +52,13 @@ public class ClienteView {
         System.out.println("Perfil actualizado correctamente.");
     }
 
+    // Inicia el flujo de cambio de contrasena
+    public void cambiarContrasena(Cliente cliente) {
+        System.out.println("--- Cambiar contrasena ---");
+        boolean exito = clienteService.cambiarContrasena(cliente);
+        System.out.println(exito ? "Contrasena actualizada correctamente." : "No se pudo cambiar la contrasena.");
+    }
+
     // Elimina un cliente por id
     public void deleteCliente(int id) {
         boolean exito = clienteService.deleteCliente(id);

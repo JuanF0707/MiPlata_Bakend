@@ -15,4 +15,5 @@ public interface ClienteService {
     Cliente updateCliente(Cliente cliente);
     boolean deleteCliente(int id);
     Cliente iniciarSesion(String usuario, String contrasena);
+    boolean cambiarContrasena(Cliente cliente);
 }
