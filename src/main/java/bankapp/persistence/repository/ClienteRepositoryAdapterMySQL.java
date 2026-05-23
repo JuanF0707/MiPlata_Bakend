@@ -6,9 +6,7 @@ import bankapp.services.outputport.ClientePersistencePort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
@@ -100,23 +98,40 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
     @Override
     public List<Cliente> findAllClientes() {
         List<Cliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cliente";
+        String sql = "SELECT c.*, cu.numero_cuenta, cu.tipo, cu.saldo, cu.tasa_interes, cu.cupo, cu.deuda " +
+                "FROM cliente c LEFT JOIN cuentas cu ON c.id = cu.cliente_id";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                Cliente c = new Cliente(
-                        rs.getInt("id"),
-                        rs.getString("identificacion"),
-                        rs.getString("nombre"),
-                        rs.getString("celular"),
-                        rs.getString("usuario"),
-                        rs.getString("contrasena")
-                );
-                c.setBloqueado(rs.getBoolean("bloqueado"));
-                c.setIntentosFallidos(rs.getInt("intentosFallidos"));
-                lista.add(c);
+            Map<Integer, Cliente> mapa = new LinkedHashMap<>();
+            while(rs.next()){
+                int id = rs.getInt("id");
+                if(!mapa.containsKey(id)){
+                    Cliente c = new Cliente(
+                            id,
+                            rs.getString("identificacion"),
+                            rs.getString("nombre"),
+                            rs.getString("celular"),
+                            rs.getString("usuario"),
+                            rs.getString("contrasena")
+                    );
+                    c.setBloqueado(rs.getBoolean("bloqueado"));
+                    c.setIntentosFallidos(rs.getInt("intentosFallidos"));
+                    mapa.put(id, c);
+                }
+                String tipo = rs.getString("tipo");
+                if(tipo != null){
+                    Cliente c = mapa.get(id);
+                    if(tipo.equals("AHORROS")){
+                        c.agregarCuenta(new CuentaAhorros(rs.getString("numero_cuenta"), rs.getDouble("saldo"), rs.getDouble("tasa_interes")));
+                    } else if(tipo.equals("TARJETA")){
+                        c.agregarCuenta(new TarjetaCredito(rs.getString("numero_cuenta"), rs.getDouble("cupo")));
+                    } else {
+                        c.agregarCuenta(new CuentaCorriente(rs.getString("numero_cuenta"), rs.getDouble("saldo")));
+                    }
+                }
             }
-        } catch (Exception e){
+            lista.addAll(mapa.values());
+        } catch(Exception e){
             System.out.println("Error al listar clientes");
         }
         return lista;
