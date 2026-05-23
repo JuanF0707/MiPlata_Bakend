@@ -3,6 +3,7 @@ package bankapp.services;
 import bankapp.domain.*;
 import bankapp.persistence.repository.MovimientoRepositoryAdapterMySQL;
 import bankapp.services.outputport.ClientePersistencePort;
+import bankapp.services.outputport.MovimientoPersistencePort;
 import bankapp.utils.AppScanner;
 import bankapp.utils.BankFormValidation;
 
@@ -13,9 +14,9 @@ public class CuentaServiceImpl implements CuentaService {
 
     private final Scanner sc = AppScanner.get();
     private final ClientePersistencePort clienteRepository;
-    private final MovimientoRepositoryAdapterMySQL movimientoRepository;
+    private final MovimientoPersistencePort movimientoRepository;
 
-    public CuentaServiceImpl(ClientePersistencePort clienteRepository, MovimientoRepositoryAdapterMySQL movimientoRepository) {
+    public CuentaServiceImpl(ClientePersistencePort clienteRepository, MovimientoPersistencePort movimientoRepository) {
         this.clienteRepository = clienteRepository;
         this.movimientoRepository = movimientoRepository;
     }

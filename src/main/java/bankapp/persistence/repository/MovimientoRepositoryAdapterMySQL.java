@@ -2,6 +2,7 @@ package bankapp.persistence.repository;
 
 import bankapp.domain.Movimiento;
 import bankapp.domain.enums.TipoMovimiento;
+import bankapp.services.outputport.MovimientoPersistencePort;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovimientoRepositoryAdapterMySQL {
+public class MovimientoRepositoryAdapterMySQL implements MovimientoPersistencePort {
 
     private Connection connection;
 

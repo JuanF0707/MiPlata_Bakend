@@ -5,6 +5,7 @@ import bankapp.persistence.repository.ClienteRepositoryAdapterMySQL;
 import bankapp.persistence.repository.MovimientoRepositoryAdapterMySQL;
 import bankapp.services.*;
 import bankapp.services.outputport.ClientePersistencePort;
+import bankapp.services.outputport.MovimientoPersistencePort;
 import bankapp.userinterface.MenuApp;
 import bankapp.view.AdminView;
 import bankapp.view.ClienteView;
@@ -21,7 +22,7 @@ public class Config {
         // Capa repository
         Connection connection = DataBaseConnectionMySQL.getInstance().getConnection();
         ClientePersistencePort clienteRepository = new ClienteRepositoryAdapterMySQL(connection);
-        MovimientoRepositoryAdapterMySQL movimientoRepository = new MovimientoRepositoryAdapterMySQL(connection);
+        MovimientoPersistencePort movimientoRepository = new MovimientoRepositoryAdapterMySQL(connection);
 
         // Capa services
         ClienteService clienteService = new ClienteServiceImpl(clienteRepository);
