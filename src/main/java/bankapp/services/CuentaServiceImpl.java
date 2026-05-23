@@ -73,6 +73,10 @@ public class CuentaServiceImpl implements CuentaService {
 
         if (exito) {
             System.out.printf("Transferencia exitosa de $%.2f a la cuenta %s%n", valor, destino.getNumeroCuenta());
+            Movimiento mOrigen = origen.getMovimientos().get(origen.getMovimientos().size()-1);
+            movimientoRepository.save(mOrigen, origen.getId());
+            Movimiento mDestino = destino.getMovimientos().get(destino.getMovimientos().size()-1);
+            movimientoRepository.save(mDestino, destino.getId());
         }
         return exito;
     }
