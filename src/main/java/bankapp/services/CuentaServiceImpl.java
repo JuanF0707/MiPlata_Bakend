@@ -28,6 +28,7 @@ public class CuentaServiceImpl implements CuentaService {
                 System.out.printf("Consignacion exitosa por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
                 Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
                 movimientoRepository.save(m, cuenta.getId());
+                movimientoRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
             }
 
         return exito;
@@ -41,6 +42,7 @@ public class CuentaServiceImpl implements CuentaService {
             System.out.printf("Retiro exitoso por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
             Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
             movimientoRepository.save(m, cuenta.getId());
+            movimientoRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
         }
         return exito;
     }
@@ -77,6 +79,8 @@ public class CuentaServiceImpl implements CuentaService {
             movimientoRepository.save(mOrigen, origen.getId());
             Movimiento mDestino = destino.getMovimientos().get(destino.getMovimientos().size()-1);
             movimientoRepository.save(mDestino, destino.getId());
+            movimientoRepository.actualizarSaldo(origen.getId(), origen.getSaldo());
+            movimientoRepository.actualizarSaldo(destino.getId(), destino.getSaldo());
         }
         return exito;
     }
