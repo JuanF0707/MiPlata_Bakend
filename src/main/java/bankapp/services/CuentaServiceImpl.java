@@ -1,6 +1,7 @@
 package bankapp.services;
 
 import bankapp.domain.*;
+import bankapp.persistence.repository.MovimientoRepositoryAdapterMySQL;
 import bankapp.services.outputport.ClientePersistencePort;
 import bankapp.utils.AppScanner;
 import bankapp.utils.BankFormValidation;
@@ -12,18 +13,23 @@ public class CuentaServiceImpl implements CuentaService {
 
     private final Scanner sc = AppScanner.get();
     private final ClientePersistencePort clienteRepository;
+    private final MovimientoRepositoryAdapterMySQL movimientoRepository;
 
-    public CuentaServiceImpl(ClientePersistencePort clienteRepository) {
+    public CuentaServiceImpl(ClientePersistencePort clienteRepository, MovimientoRepositoryAdapterMySQL movimientoRepository) {
         this.clienteRepository = clienteRepository;
+        this.movimientoRepository = movimientoRepository;
     }
 
     @Override
     public boolean consignar(Cuenta cuenta) {
         double valor = BankFormValidation.validarDouble("Cuanto desea consignar? $");
         boolean exito = cuenta.consignar(valor);
-        if (exito) {
-            System.out.printf("Consignacion exitosa por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
-        }
+            if (exito) {
+                System.out.printf("Consignacion exitosa por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
+                Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
+                movimientoRepository.save(m, cuenta.getId());
+            }
+
         return exito;
     }
 
@@ -33,6 +39,8 @@ public class CuentaServiceImpl implements CuentaService {
         boolean exito = cuenta.retirar(valor);
         if (exito) {
             System.out.printf("Retiro exitoso por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
+            Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
+            movimientoRepository.save(m, cuenta.getId());
         }
         return exito;
     }

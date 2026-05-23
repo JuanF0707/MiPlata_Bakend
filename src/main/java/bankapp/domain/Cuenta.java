@@ -11,6 +11,7 @@ import java.util.List;
 public class Cuenta {
 
     private Date fechaApertura;
+    private int id; // Agrego atributo, creo que debo agregarlo a los SQL de ClienteRepositoryAdapterMySQL
     private String numeroCuenta;
     protected double saldo;
     protected EstadoCuenta estado;
@@ -32,8 +33,16 @@ public class Cuenta {
     public EstadoCuenta getEstado() { return estado; }
     public List<Movimiento> getMovimientos() { return movimientos; }
 
+    public int getId() {
+        return id;
+    }
+
     // Setters
     public void setEstado(EstadoCuenta estado) { this.estado = estado; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     // Consulta el saldo actual
     public double consultarSaldo() {

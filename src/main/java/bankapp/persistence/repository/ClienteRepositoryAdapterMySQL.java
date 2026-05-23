@@ -174,6 +174,7 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
                     } else {
                         cuenta = new CuentaCorriente(rs.getString("numero_cuenta"), rs.getDouble("saldo"));
                     }
+                    cuenta.setId(rs.getInt("cuenta_id"));
                     cliente.agregarCuenta(cuenta);
                 }
             }
