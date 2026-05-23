@@ -9,6 +9,7 @@ import bankapp.services.outputport.ClientePersistencePort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +102,27 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
     @Override
     public List<Cliente> findAllClientes() {
-        return List.of();
+        List<Cliente> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cliente";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Cliente c = new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("identificacion"),
+                        rs.getString("nombre"),
+                        rs.getString("celular"),
+                        rs.getString("usuario"),
+                        rs.getString("contrasena")
+                );
+                c.setBloqueado(rs.getBoolean("bloqueado"));
+                c.setIntentosFallidos(rs.getInt("intentosFallidos"));
+                lista.add(c);
+            }
+        } catch (Exception e){
+            System.out.println("Error al listar clientes");
+        }
+        return lista;
     }
 
     @Override
@@ -142,16 +163,48 @@ public class ClienteRepositoryAdapterMySQL implements ClientePersistencePort {
 
     @Override
     public boolean existeUsuario(String usuario) {
+
+        String sql = "SELECT COUNT(*) FROM cliente WHERE usuario = ?";
+
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, usuario);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1) >0;
+            }
+        } catch (Exception e){
+            System.out.println("Error al verificar usuario");
+        }
         return false;
     }
 
     @Override
     public boolean deleteById(int id) {
+        String sql = "DELETE FROM cliente WHERE id = ? ";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, id);
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        } catch (Exception e){
+            System.out.println("Error al eliminar cliente");
+        }
         return false;
     }
 
     @Override
     public Optional<Cliente> updateCliente(Cliente clienteActualizado) {
+
+        String sql = "UPDATE cliente SET nombre = ?, celular = ? WHERE id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, clienteActualizado.getNombre());
+            ps.setString(2, clienteActualizado.getCelular());
+            ps.setInt(3, clienteActualizado.getId());
+            int filas = ps.executeUpdate();
+            if (filas > 0) return Optional.of(clienteActualizado);
+        } catch (Exception e){
+            System.out.println("Error al actualizar cliente");
+        }
         return Optional.empty();
     }
 }
