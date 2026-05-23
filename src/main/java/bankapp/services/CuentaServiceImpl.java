@@ -87,7 +87,7 @@ public class CuentaServiceImpl implements CuentaService {
 
     @Override
     public void verMovimientos(Cuenta cuenta) {
-        List<Movimiento> movimientos = cuenta.obtenerMovimientos();
+        List<Movimiento> movimientos = movimientoRepository.findByCuentaId(cuenta.getId()); // Modifico los cambios en memoria por una consulta en MySQL
         if (movimientos.isEmpty()) {
             System.out.println("No hay movimientos registrados.");
             return;
