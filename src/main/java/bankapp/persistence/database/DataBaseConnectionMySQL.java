@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class DataBaseConnectionMySQL {
 
     // Atributos
-    private static final String url = "jdbc:mysql://localhost:3306/mi_plata";
+    private static final String url = "jdbc:mysql://localhost:3306/mi_plata";  // lucia_store
     private static final String user = "root";
-    private static final String password = "";
+    private static final String password = "Chuga_24.";
     private Connection connection;
 
     private static DataBaseConnectionMySQL instance;
