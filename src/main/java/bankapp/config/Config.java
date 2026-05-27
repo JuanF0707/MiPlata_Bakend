@@ -2,9 +2,11 @@ package bankapp.config;
 
 import bankapp.persistence.database.DataBaseConnectionMySQL;
 import bankapp.persistence.repository.ClienteRepositoryAdapterMySQL;
+import bankapp.persistence.repository.CuentaRepositoryAdapterMySQL;
 import bankapp.persistence.repository.MovimientoRepositoryAdapterMySQL;
 import bankapp.services.*;
 import bankapp.services.outputport.ClientePersistencePort;
+import bankapp.services.outputport.CuentaPersistencePort;
 import bankapp.services.outputport.MovimientoPersistencePort;
 import bankapp.userinterface.MenuApp;
 import bankapp.view.AdminView;
@@ -24,10 +26,13 @@ public class Config {
         ClientePersistencePort clienteRepository = new ClienteRepositoryAdapterMySQL(connection);
         MovimientoPersistencePort movimientoRepository = new MovimientoRepositoryAdapterMySQL(connection);
 
+
+        CuentaPersistencePort cuentaRepository = new CuentaRepositoryAdapterMySQL(connection);
+
         // Capa services
         ClienteService clienteService = new ClienteServiceImpl(clienteRepository);
         CuentaService cuentaService = new CuentaServiceImpl(clienteRepository, movimientoRepository);
-        TarjetaCreditoService tarjetaService = new TarjetaCreditoServiceImpl();
+        TarjetaCreditoService tarjetaService = new TarjetaCreditoServiceImpl(movimientoRepository);
 
         // Capa view
         ClienteView clienteView = new ClienteView(clienteService);
