@@ -2,6 +2,7 @@ package bankapp.services;
 
 import bankapp.domain.Movimiento;
 import bankapp.domain.TarjetaCredito;
+import bankapp.services.outputport.CuentaPersistencePort;
 import bankapp.services.outputport.MovimientoPersistencePort;
 import bankapp.utils.BankFormValidation;
 
@@ -10,9 +11,11 @@ public class TarjetaCreditoServiceImpl implements TarjetaCreditoService {
 
 
     private final MovimientoPersistencePort movimientoRepository;
+    private final CuentaPersistencePort cuentaRepository;
 
-    public TarjetaCreditoServiceImpl(MovimientoPersistencePort movimientoRepository) {
+    public TarjetaCreditoServiceImpl(MovimientoPersistencePort movimientoRepository, CuentaPersistencePort cuentaRepository) {
         this.movimientoRepository = movimientoRepository;
+        this.cuentaRepository = cuentaRepository;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class TarjetaCreditoServiceImpl implements TarjetaCreditoService {
         if (exito) {
             Movimiento m = tarjeta.getMovimientos().get(tarjeta.getMovimientos().size() - 1);
             movimientoRepository.save(m, tarjeta.getId());
-            movimientoRepository.actualizarSaldo(tarjeta.getId(), tarjeta.getDeuda());
+            cuentaRepository.updateSaldo(tarjeta.getId(), tarjeta.getDeuda());
         }
         return exito;
 
@@ -51,7 +54,7 @@ public class TarjetaCreditoServiceImpl implements TarjetaCreditoService {
             System.out.printf("Pago exitoso. Deuda restante: $%.2f%n", tarjeta.getDeuda());
             Movimiento m = tarjeta.getMovimientos().get(tarjeta.getMovimientos().size()-1);
             movimientoRepository.save(m, tarjeta.getId());
-            movimientoRepository.actualizarSaldo(tarjeta.getId(), tarjeta.getDeuda());
+            cuentaRepository.updateSaldo(tarjeta.getId(), tarjeta.getDeuda());
         }
         return exito;
     }
@@ -67,7 +70,7 @@ public class TarjetaCreditoServiceImpl implements TarjetaCreditoService {
         if(exito){
             Movimiento m = tarjeta.getMovimientos().get(tarjeta.getMovimientos().size()-1);
             movimientoRepository.save(m, tarjeta.getId());
-            movimientoRepository.actualizarSaldo(tarjeta.getId(), tarjeta.getDeuda());
+            cuentaRepository.updateSaldo(tarjeta.getId(), tarjeta.getDeuda());
         }
         return exito;
     }

@@ -21,18 +21,19 @@ public class Config {
 
     public static MenuApp createMenuApp() {
 
-        // Capa repository
+        // Conexión a la BDD
         Connection connection = DataBaseConnectionMySQL.getInstance().getConnection();
+
+        // Capa repository
         ClientePersistencePort clienteRepository = new ClienteRepositoryAdapterMySQL(connection);
+        CuentaPersistencePort cuentaRepository = new CuentaRepositoryAdapterMySQL(connection);
         MovimientoPersistencePort movimientoRepository = new MovimientoRepositoryAdapterMySQL(connection);
 
 
-        CuentaPersistencePort cuentaRepository = new CuentaRepositoryAdapterMySQL(connection);
-
         // Capa services
         ClienteService clienteService = new ClienteServiceImpl(clienteRepository);
-        CuentaService cuentaService = new CuentaServiceImpl(clienteRepository, movimientoRepository);
-        TarjetaCreditoService tarjetaService = new TarjetaCreditoServiceImpl(movimientoRepository);
+        CuentaService cuentaService = new CuentaServiceImpl(clienteRepository, movimientoRepository, cuentaRepository);
+        TarjetaCreditoService tarjetaService = new TarjetaCreditoServiceImpl(movimientoRepository, cuentaRepository);
 
         // Capa view
         ClienteView clienteView = new ClienteView(clienteService);
