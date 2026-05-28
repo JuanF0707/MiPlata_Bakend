@@ -1,8 +1,8 @@
 package bankapp.services;
 
 import bankapp.domain.*;
-import bankapp.persistence.repository.MovimientoRepositoryAdapterMySQL;
 import bankapp.services.outputport.ClientePersistencePort;
+import bankapp.services.outputport.CuentaPersistencePort;
 import bankapp.services.outputport.MovimientoPersistencePort;
 import bankapp.utils.AppScanner;
 import bankapp.utils.BankFormValidation;
@@ -15,10 +15,12 @@ public class CuentaServiceImpl implements CuentaService {
     private final Scanner sc = AppScanner.get();
     private final ClientePersistencePort clienteRepository;
     private final MovimientoPersistencePort movimientoRepository;
+    private final CuentaPersistencePort cuentaRepository;
 
-    public CuentaServiceImpl(ClientePersistencePort clienteRepository, MovimientoPersistencePort movimientoRepository) {
+    public CuentaServiceImpl(ClientePersistencePort clienteRepository, MovimientoPersistencePort movimientoRepository, CuentaPersistencePort cuentaRepository) {
         this.clienteRepository = clienteRepository;
         this.movimientoRepository = movimientoRepository;
+        this.cuentaRepository = cuentaRepository;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class CuentaServiceImpl implements CuentaService {
                 System.out.printf("Consignacion exitosa por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
                 Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
                 movimientoRepository.save(m, cuenta.getId());
-                movimientoRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
+                cuentaRepository.updateSaldo(cuenta.getId(), cuenta.getSaldo());
             }
 
         return exito;
@@ -43,7 +45,7 @@ public class CuentaServiceImpl implements CuentaService {
             System.out.printf("Retiro exitoso por $%.2f. Nuevo saldo: $%.2f%n", valor, cuenta.getSaldo());
             Movimiento m = cuenta.getMovimientos().get(cuenta.getMovimientos().size()-1);
             movimientoRepository.save(m, cuenta.getId());
-            movimientoRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
+            cuentaRepository.updateSaldo(cuenta.getId(), cuenta.getSaldo());
         }
         return exito;
     }
@@ -80,8 +82,8 @@ public class CuentaServiceImpl implements CuentaService {
             movimientoRepository.save(mOrigen, origen.getId());
             Movimiento mDestino = destino.getMovimientos().get(destino.getMovimientos().size()-1);
             movimientoRepository.save(mDestino, destino.getId());
-            movimientoRepository.actualizarSaldo(origen.getId(), origen.getSaldo());
-            movimientoRepository.actualizarSaldo(destino.getId(), destino.getSaldo());
+            cuentaRepository.updateSaldo(origen.getId(), origen.getSaldo());
+            cuentaRepository.updateSaldo(destino.getId(), destino.getSaldo());
         }
         return exito;
     }

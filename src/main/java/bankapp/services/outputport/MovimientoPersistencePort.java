@@ -8,8 +8,6 @@ public interface MovimientoPersistencePort {
 
     void save (Movimiento movimiento, int cuentaId);
     List<Movimiento> findByCuentaId(int cuentaId);
-    void actualizarSaldo (int cuentaId, double nuevoSaldo);
-
 
 
 }
